@@ -2,9 +2,9 @@
 
 **Goal:** Quantify the human and economic impact of wildfire-driven transmission outages across all 58 CA counties, evaluate distributed energy resource (DER) deployment as a resilience counterfactual, and produce a corridor-level investment prioritization matrix for utility and policy decision-makers.
 
-**Status: COMPLETE** — all 12 scripts run, all 8 processed datasets generated, all 5 final outputs produced.
+**Status: COMPLETE** — all 12 scripts run, all 8 processed datasets generated, all final outputs produced.
 
-**Last updated:** April 16, 2026
+**Last updated:** April 23, 2026
 
 ---
 
@@ -122,11 +122,27 @@ Four-dimension corridor prioritization over 291 corridors (county × Owner × vo
 
 Combined priority = 0.35×D1 + 0.25×D2 + 0.25×D3 + 0.15×D4. Runtime ~57 seconds using vectorized spatial joins. Saves `data/processed/prioritization_matrix.csv`.
 
-### `scripts/07_visualization.py` (623 lines) — COMPLETE
-Produces all five final presentation outputs. Includes three targeted post-review fixes:
-- Interactive map: critical facilities layer defaults off; hospitals as blue `+` DivIcon markers; fire stations semi-transparent (opacity=0.4)
-- Financial case: break-even line prominent and labelled; net cost labels moved above bars; scenario-coloured bar borders
-- Killer slide: reduced inter-table whitespace; per-scenario action labels; Key Takeaways section with 3 bold bullets
+### `scripts/07_visualization.py` (~1,600 lines) — COMPLETE
+Produces all final presentation outputs across three generations (v1/v2 superseded by v3).
+
+**v2 outputs** (retained for reference):
+- `wildfire_microgrid_analysis_v2.html` — CartoDB dark-matter interactive map, 8 toggle layers, scenario buffer polygons, info panel, Plan Now popups
+- `prioritization_matrix_v2.png` — dark-background bubble scatter with quadrant fills and action tier colouring
+
+**v3 outputs** (current, supersede v2):
+- `wildfire_scenarios_v3.html` — wrapper HTML loading three side-by-side scenario maps via `<iframe src=>` (preserves JavaScript for Leaflet and tooltip execution)
+- `scenario_a_temp.html` — Scenario A: Fortress Grid; orange (#FF8C00, 20% opacity) residual outage zone; tooltip on zone polygon
+- `scenario_b_temp.html` — Scenario B: Islands of Power; dashed blue full outage footprint; Phase-1 green-outlined CBGs (11,945, pre-deployed); Phase-2 blue-filled CBGs (1,533, still exposed); tooltips on both CBG layers
+- `scenario_c_temp.html` — Scenario C: Reactive Crisis; red outage zone (205,955 km²); 2,827 dark-red emergency circles (radius=4); tooltips on zone and circles
+- `prioritization_matrix_v3.png` — redesigned scatter: separate title/subtitle rows, 2-line axis labels with directional arrows, Sierra County annotation inside top-right quadrant, bubble-size legend outside axes, hardcoded overlap-free top-8 labels
+
+All three temp maps include:
+- Transmission lines coloured by risk tier (Critical/High/Moderate/Low) with `GeoJsonTooltip` showing risk_tier, kV, Owner, composite_score (`sticky=True`)
+- Bounds locked to full California: `fit_bounds([[32.5, -124.5], [42.0, -114.0]])`
+- CartoDB dark_matter basemap
+
+**Retained outputs** (unchanged from earlier sessions):
+- `scenario_comparison.png`, `financial_case.png`, `killer_slide.png`, `prioritization_scatter.png`
 
 ### `scripts/fetch_critical_facilities.py` (75 lines) — COMPLETE
 Fetches hospital and fire station locations from HIFLD ArcGIS services. Saves `data/raw/microgrids/critical_facilities.gpkg` (3,778 points).
@@ -258,38 +274,55 @@ Sierra County dominates: highest D1 (7.76) driven by elevated 65+ population, hi
 
 ## Final Outputs — ALL COMPLETE
 
+v3 versions supersede v1/v2 versions where both exist.
+
 ```
 outputs/
 ├── maps/
-│   └── wildfire_microgrid_analysis.html    (100 MB — interactive folium map)
+│   ├── wildfire_scenarios_v3.html          (6 KB — wrapper; references three iframes below)  ← CURRENT
+│   ├── scenario_a_temp.html                (1.3 MB — Map A: Fortress Grid)                   ← CURRENT
+│   ├── scenario_b_temp.html                (5.0 MB — Map B: Islands of Power)                ← CURRENT
+│   ├── scenario_c_temp.html                (3.7 MB — Map C: Reactive Crisis)                 ← CURRENT
+│   ├── wildfire_microgrid_analysis_v2.html (80 MB — 8-layer reference map)
+│   └── wildfire_microgrid_analysis.html    (100 MB — original v1 map)
 └── tables/
-    ├── scenario_comparison.png             (384 KB — 4770×2687, 300 DPI)
-    ├── financial_case.png                  (294 KB — 4170×1850, 300 DPI)
-    ├── prioritization_scatter.png          (350 KB — 3270×2366, 300 DPI)
-    └── killer_slide.png                    (480 KB — 4668×3176, 300 DPI)
+    ├── prioritization_matrix_v3.png        (0.68 MB — 3796×2738 — redesigned scatter)        ← CURRENT
+    ├── scenario_comparison.png             (384 KB  — 4770×2687, 300 DPI)
+    ├── financial_case.png                  (294 KB  — 4170×1850, 300 DPI)
+    ├── killer_slide.png                    (480 KB  — 4668×3176, 300 DPI)
+    └── prioritization_scatter.png          (350 KB  — 3270×2366, 300 DPI — v1, superseded)
 ```
+
+> **To open the three-scenario map:** open `outputs/maps/wildfire_scenarios_v3.html` in a browser.
+> The three `*_temp.html` files must remain in the same `outputs/maps/` directory — they are
+> referenced by relative `src=` paths and will not load if moved.
 
 ### Output Descriptions
 
-**1. `wildfire_microgrid_analysis.html`** — Interactive folium map with 6 toggle layers:
-- Fire Hazard Severity Zones (FHSZ, decimated for performance)
-- Transmission lines coloured by risk tier (Critical/High/Moderate/Low)
-- Scenario A, B, C line overlays (off by default)
-- Critical Facilities: hospitals as blue `+` markers, fire stations as semi-transparent orange dots (off by default)
-- Layer control, scale bar, measure tool, legend, title bar
+**1. `wildfire_scenarios_v3.html` + `scenario_a/b/c_temp.html`** — Three side-by-side interactive scenario maps:
 
-**2. `scenario_comparison.png`** — 2×3 panel bar chart:
-Population protected, avoided cost, net capital cost, 20-yr NPV, payback period, cost per person. Bottom legend explains Scenario A/B/C with full names and descriptions.
+| File | Scenario | Key layers |
+|------|----------|------------|
+| `scenario_a_temp.html` | Fortress Grid | Orange outage zone (buffer shrunk 25–50%); tooltip: "Residual outage zone after hardening" |
+| `scenario_b_temp.html` | Islands of Power | Dashed blue full outage footprint; green CBG outlines (Phase-1, pre-deployed, 11,945); blue CBG fills (Phase-2, residual, 1,533) |
+| `scenario_c_temp.html` | Reactive Crisis | Red outage zone 205,955 km²; 2,827 dark-red emergency circles at critical facilities |
 
-**3. `financial_case.png`** — 2-panel chart:
-Left: cumulative 20-year cash flow curves (A=blue, B=green, C=red) with prominent Break-even line. Right: stacked capital cost breakdown (gross → SGIP Equity offset → IRA ITC offset → net) with scenario-coloured bar borders; net cost labels above bars.
+All three maps share: CartoDB dark basemap · CA bounds locked · transmission lines by risk tier with hover tooltips (risk_tier, kV, Owner, composite_score).
 
-**4. `prioritization_scatter.png`** — D1 Life Safety vs D2 Resilience Gap scatter plot. Bubble size ∝ population at risk. Coloured by action tier. Top 8 corridors labelled. Quadrant annotations including HIGH PRIORITY ZONE.
+**2. `prioritization_matrix_v3.png`** — D1 Life Safety vs D2 Resilience Gap scatter (v3, current):
+Bubble size ∝ population at risk. Coloured by action tier. Quadrant labels at true centres ("ACT / PLAN NOW", "PUBLIC FUNDING", "COMMERCIAL OPPORTUNITY", "MONITOR"). Sierra County annotated inside top-right quadrant. Bubble-size legend outside axes. Top-8 corridors labelled with hardcoded overlap-free positions.
+
+**3. `scenario_comparison.png`** — 2×3 panel bar chart:
+Population protected, avoided cost, net capital cost, 20-yr NPV, payback period, cost per person. Bottom legend explains Scenario A/B/C.
+
+**4. `financial_case.png`** — 2-panel chart:
+Left: cumulative 20-year cash flow curves with Break-even line. Right: stacked capital cost breakdown (gross → SGIP Equity → IRA ITC → net).
 
 **5. `killer_slide.png`** — Executive summary slide:
-- Scenario summary table (3 rows): population, avoided cost, net cost, NPV, payback, cost/person, SVI %, action label
-- Top 5 Priority Corridors table (5 rows): county, owner, kV class, score, tier, D1, D2
-- Key Takeaways box (indigo background, 3 bold bullets)
+Scenario summary table · Top 5 Priority Corridors table · Key Takeaways box (3 bold bullets).
+
+**6. `wildfire_microgrid_analysis_v2.html`** — 8-layer reference map (80 MB):
+FHSZ zones, transmission lines by risk tier, all three scenario buffer polygons, critical facilities. Retained as a more detailed single-map reference.
 
 ---
 

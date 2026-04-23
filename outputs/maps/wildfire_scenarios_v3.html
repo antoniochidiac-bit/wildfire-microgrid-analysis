@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>California Wildfire-Microgrid Resilience &#8212; Scenario Comparison</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;padding:20px 24px 28px;background:#1a1a2e;
+         font-family:Arial,Helvetica,sans-serif;color:#e0e0e0}
+    .hdr{text-align:center;margin-bottom:18px}
+    .hdr h1{font-size:22px;font-weight:bold;margin:0 0 8px;color:#fff}
+    .hdr p{font-size:13px;color:#aaa;max-width:840px;margin:0 auto;line-height:1.55}
+    .row{display:flex;gap:10px;margin-bottom:14px}
+    .col{flex:1;min-width:0}
+    .mtitle{font-size:13px;font-weight:bold;text-align:center;margin-bottom:4px;
+             padding:7px 10px;background:rgba(255,255,255,.06);
+             border-radius:5px 5px 0 0;border-bottom:1px solid #333;color:#fff}
+    .msub{font-size:10.5px;color:#aaa;text-align:center;margin:0 0 6px;
+           font-style:italic;line-height:1.4}
+    iframe{width:100%;height:600px;border:1px solid #333;
+            border-radius:0 0 4px 4px;display:block}
+    .leg{background:rgba(255,255,255,.05);border-radius:6px;
+          border:1px solid #333;padding:14px 20px;margin-top:6px}
+    .leg-hdr{font-size:14px;font-weight:bold;margin:0 0 12px;color:#fff}
+    .leg-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .ls h4{margin:0 0 8px;font-size:11px;text-transform:uppercase;
+            letter-spacing:.05em;color:#888}
+    .li{display:flex;align-items:flex-start;gap:9px;margin-bottom:6px;font-size:12px}
+    .sl{display:inline-block;width:30px;border-radius:2px;flex-shrink:0;margin-top:5px}
+    .sf{display:inline-block;width:14px;height:14px;border-radius:3px;
+         flex-shrink:0;margin-top:2px}
+    .sd{display:inline-block;width:10px;height:10px;border-radius:50%;
+         flex-shrink:0;margin-top:3px}
+    .ki{grid-column:1/-1;background:rgba(231,76,60,.08);
+         border-left:3px solid #E74C3C;padding:10px 14px;
+         border-radius:0 5px 5px 0;font-size:12.5px;color:#ccc;
+         line-height:1.6;margin-top:6px}
+    .ki b{color:#fff}
+  </style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>California Wildfire-Microgrid Resilience &#8212; Scenario Comparison</h1>
+  <p>All three maps show the same California extent. Hover over any transmission line
+  for risk tier, voltage, utility, and risk score.
+  <b style="color:#fff">Scenario B (Islands of Power)</b> shows the smallest net
+  exposure because microgrids are pre-positioned on critical corridors before failures occur.</p>
+</div>
+
+<div class="row">
+  <div class="col">
+    <div class="mtitle">Scenario A &#8212; Fortress Grid</div>
+    <div class="msub">Hardening investment reduces but does not eliminate exposure</div>
+    <iframe src="scenario_a_temp.html" style="width:100%;height:600px;border:none;display:block;"></iframe>
+  </div>
+  <div class="col">
+    <div class="mtitle">Scenario B &#8212; Islands of Power</div>
+    <div class="msub">Pre-positioned microgrids reduce net community exposure</div>
+    <iframe src="scenario_b_temp.html" style="width:100%;height:600px;border:none;display:block;"></iframe>
+  </div>
+  <div class="col">
+    <div class="mtitle">Scenario C &#8212; Reactive Crisis</div>
+    <div class="msub">No pre-built remedy &#8212; full population exposed at point of failure</div>
+    <iframe src="scenario_c_temp.html" style="width:100%;height:600px;border:none;display:block;"></iframe>
+  </div>
+</div>
+
+<div class="leg">
+  <div class="leg-hdr">Shared Legend</div>
+  <div class="leg-grid">
+
+    <div class="ls">
+      <h4>Transmission Line Risk Tier (hover for details)</h4>
+      <div class="li">
+        <span class="sl" style="height:3px;background:#E74C3C"></span>
+        <span>Critical &#8212; highest wildfire-driven failure risk</span>
+      </div>
+      <div class="li">
+        <span class="sl" style="height:2px;background:#E67E22"></span>
+        <span>High &#8212; elevated risk</span>
+      </div>
+      <div class="li">
+        <span class="sl" style="height:1.5px;background:#F1C40F"></span>
+        <span>Moderate</span>
+      </div>
+      <div class="li">
+        <span class="sl" style="height:1px;background:#95A5A6"></span>
+        <span>Low</span>
+      </div>
+    </div>
+
+    <div class="ls">
+      <h4>Scenario Exposure Zones</h4>
+      <div class="li">
+        <span class="sf" style="background:#FF8C00;opacity:.6"></span>
+        <span><b>Scenario A</b> &#8212; orange fill = residual outage zone after hardening
+        (buffer distances shrunk 25&#8211;50%)</span>
+      </div>
+      <div class="li">
+        <span class="sf" style="background:none;border:1.5px dashed #3498DB"></span>
+        <span><b>Scenario B</b> &#8212; dashed blue outline = full outage footprint
+        (Critical + High corridors)</span>
+      </div>
+      <div class="li">
+        <span class="sf" style="background:#3498DB;opacity:.5"></span>
+        <span><b>Scenario B</b> &#8212; blue fill = Phase-2 census block groups
+        (near High-tier lines only, still exposed — 1,533 CBGs)</span>
+      </div>
+      <div class="li">
+        <span class="sf" style="background:none;border:1.5px solid #2ECC71"></span>
+        <span><b>Scenario B</b> &#8212; green outline = Phase-1 census block groups
+        (near Critical lines, microgrids pre-deployed — 11,945 CBGs)</span>
+      </div>
+      <div class="li">
+        <span class="sf" style="background:#E74C3C;opacity:.6"></span>
+        <span><b>Scenario C</b> &#8212; red fill = full exposure, no pre-positioned remedy
+        (205,955 km&#178; outage zone)</span>
+      </div>
+      <div class="li">
+        <span class="sd" style="background:#8B0000"></span>
+        <span><b>Scenario C</b> &#8212; dark circles = emergency microgrid at critical
+        facilities (reactive &#8212; arrives after crisis onset,
+        2,827 facilities)</span>
+      </div>
+    </div>
+
+    <div class="ki">
+      <b>Reading left to right: exposure shrinks from Scenario C &#8594; A &#8594; B</b>
+      as investment becomes more proactive and pre-positioned.
+      Scenario B converts 11,945 of 13,478 block groups
+      (89%) from &#8220;full exposure&#8221;
+      to &#8220;pre-deployed coverage&#8221; by positioning microgrids on the most
+      critical corridors before failures occur.
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
